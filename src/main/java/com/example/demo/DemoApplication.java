@@ -23,7 +23,7 @@ public class DemoApplication {
 	public static void main(String[] args) {
 		ServletWebServerFactory serverFactory = new TomcatServletWebServerFactory();
 		WebServer webServer=serverFactory.getWebServer(servletContext -> {
-			HelloController HelloController=new HelloController();
+			HelloController helloController=new HelloController();
 			servletContext.addServlet("frontController",new HttpServlet() {
 				@Override
 				protected void service(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException{
@@ -31,7 +31,7 @@ public class DemoApplication {
 					if(req.getRequestURI().equals("/hello") && req.getMethod().equals(HttpMethod.GET.name())) {
 						String name = req.getParameter("name");
 
-						String ret = elloController.hello(name);
+						String ret = helloController.hello(name);
 						
 						resp.setStatus(HttpStatus.OK.value());
 						resp.setHeader(HttpHeaders.CONTENT_TYPE, MediaType.TEXT_PLAIN_VALUE);
