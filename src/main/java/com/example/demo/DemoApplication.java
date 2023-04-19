@@ -23,18 +23,25 @@ public class DemoApplication {
 	public static void main(String[] args) {
 		ServletWebServerFactory serverFactory = new TomcatServletWebServerFactory();
 		WebServer webServer=serverFactory.getWebServer(servletContext -> {
+			HelloController HelloController=new HelloController();
 			servletContext.addServlet("frontController",new HttpServlet() {
 				@Override
 				protected void service(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException{
 					//인증, 보안, 다국어, 공통기능들을 처리
 					if(req.getRequestURI().equals("/hello") && req.getMethod().equals(HttpMethod.GET.name())) {
 						String name = req.getParameter("name");
+
+						String ret = elloController.hello(name);
+						
 						resp.setStatus(HttpStatus.OK.value());
 						resp.setHeader(HttpHeaders.CONTENT_TYPE, MediaType.TEXT_PLAIN_VALUE);
-						resp.getWriter().println("Hello " + name);
-					}else if (req.getRequestURI().equals("/user")){
+						
+						resp.getWriter().println(ret);
+					}
+					else if (req.getRequestURI().equals("/user")){
 
-					}else{
+					}
+					else{
 						resp.setStatus(HttpStatus.NOT_FOUND.value());
 					}
 				}
