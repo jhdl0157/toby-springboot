@@ -1,6 +1,5 @@
 package com.example.demo;
 
-
 import org.apache.catalina.startup.Tomcat;
 import org.springframework.boot.web.embedded.tomcat.TomcatServletWebServerFactory;
 import org.springframework.boot.web.server.WebServer;
@@ -24,22 +23,25 @@ import java.io.IOException;
 public class DemoApplication {
 
 	public static void main(String[] args) {
-		//스프링 컨테이너 만들기
-		GenericWebApplicationContext applicationContext = new GenericWebApplicationContext();
+		// 스프링 컨테이너 만들기
+		final GenericWebApplicationContext applicationContext = new GenericWebApplicationContext() {
+			@Override
+			protected void onRefresh() {
+				super.onRefresh();
+
+				ServletWebServerFactory serverFactory = new TomcatServletWebServerFactory();
+				WebServer webServer = serverFactory.getWebServer(servletContext -> {
+					servletContext.addServlet("dispatcherServelt",
+							new DispatcherServlet(this)).addMapping("/*"); // 모든 요청을 처리하겠다.
+
+				});
+				webServer.start();
+			}
+
+		};
 		applicationContext.registerBean(HelloController.class);
 		applicationContext.registerBean(SimpleHelloService.class);
-		applicationContext.refresh(); //컨테이너를 초기화 해주는 작업
-
-
-
-		ServletWebServerFactory serverFactory = new TomcatServletWebServerFactory();
-		WebServer webServer=serverFactory.getWebServer(servletContext -> {
-			servletContext.addServlet("dispatcherServelt",
-					new DispatcherServlet(applicationContext)
-				).addMapping("/*"); //모든 요청을 처리하겠다.
-
-		});
-		webServer.start();
+		applicationContext.refresh(); // 컨테이너를 초기화 해주는 작업
 
 	}
 
