@@ -25,6 +25,7 @@ public class DemoApplication {
 		//스프링 컨테이너 만들기
 		GenericApplicationContext applicationContext = new GenericApplicationContext();
 		applicationContext.registerBean(HelloController.class);
+		applicationContext.registerBean(SimpleHelloService.class);
 		applicationContext.refresh(); //컨테이너를 초기화 해주는 작업
 
 
