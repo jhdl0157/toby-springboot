@@ -1,6 +1,7 @@
 package com.example.demo;
 
 
+import org.springframework.boot.SpringApplication;
 import org.springframework.boot.web.embedded.tomcat.TomcatServletWebServerFactory;
 import org.springframework.boot.web.server.WebServer;
 import org.springframework.boot.web.servlet.ServletContextInitializer;
@@ -33,7 +34,7 @@ public class DemoApplication {
 
 	public static void main(String[] args) {
 		// 스프링 컨테이너 만들기
-		 MySpringApplication.run(DemoApplication.class, args);  //우리가 아무생각 없이 보던 스프링 초기 코드 완성 
+		 SpringApplication.run(DemoApplication.class, args);  //우리가 아무생각 없이 보던 스프링 초기 코드 완성 
 
 	}
 }
