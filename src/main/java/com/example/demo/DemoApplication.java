@@ -5,7 +5,7 @@ import org.springframework.boot.web.embedded.tomcat.TomcatServletWebServerFactor
 import org.springframework.boot.web.server.WebServer;
 import org.springframework.boot.web.servlet.ServletContextInitializer;
 import org.springframework.boot.web.servlet.server.ServletWebServerFactory;
-
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 
@@ -19,6 +19,17 @@ import org.springframework.web.servlet.DispatcherServlet;
 @ComponentScan  //하위 패키지의 클래스들을 뒤져서 @Component라는 오브젝트를 스프링 컨테이너에 등록을 해준다.
 public class DemoApplication {
 
+	@Bean
+	public ServletWebServerFactory servletWebServerFactory(){
+		return new TomcatServletWebServerFactory();
+	}
+
+	@Bean
+	public DispatcherServlet dispatcherServelt(){
+		//applicationContext를 어떻게 전달을 받을까??
+		return new DispatcherServlet();
+	}
+
 
 	public static void main(String[] args) {
 		// 스프링 컨테이너 만들기
@@ -27,10 +38,12 @@ public class DemoApplication {
 			protected void onRefresh() {
 				super.onRefresh();
 
-				ServletWebServerFactory serverFactory = new TomcatServletWebServerFactory();
+				ServletWebServerFactory serverFactory = this.getBean(ServletWebServerFactory.class);
+				DispatcherServlet dispatcherServlet=this.getBean(DispatcherServlet.class);
+				
 				WebServer webServer = serverFactory.getWebServer(servletContext -> {
 					servletContext.addServlet("dispatcherServelt",
-							new DispatcherServlet(this)).addMapping("/*"); // 모든 요청을 처리하겠다.
+					dispatcherServlet).addMapping("/*"); // 모든 요청을 처리하겠다.
 
 				});
 				webServer.start();
